@@ -4,7 +4,9 @@ struct ContentView: View {
     let rows = Array(repeating: GridItem(.adaptive(minimum: 25)), count: 12)
     let lastVisibleDate = Date().advanced(by: TimeInterval(-60 * 60 * 24 * 84))
     @State var addActivity = false
+    @State var addActivity2 = false
     @State var addHabits = false
+    @State var addHabits2 = false
     @State var addSettings = false
     @State var addGitHub = false
     var body: some View {
@@ -48,6 +50,24 @@ struct ContentView: View {
                         .font(.headline.monospaced())
                         .frame(height: 30)
                         Spacer()
+                        ScrollView(.vertical) {
+                            VStack(spacing: 3.25) {
+                                ForEach(0..<10) { i in
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .frame(height: 40)
+                                            .foregroundStyle(.secondary.opacity(0.2))
+                                        HStack {
+                                            Text("Habit \(i)")
+                                            Spacer()
+                                        }
+                                        .padding(.leading)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.vertical, 20)
+                        Spacer()
                         HStack {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 5)
@@ -56,14 +76,14 @@ struct ContentView: View {
                                 HStack {
                                     Text("0")
                                     Spacer()
-                                    Text("10")
+                                    Text("7")
                                 }
                                 .padding(.horizontal)
                                 .foregroundStyle(.white)
                             }
                             Spacer()
                             Button(action: {
-                                addActivity = true
+                                addHabits2.toggle()
                             }, label: {
                                 Label(
                                     title: { Text("Add Habit") },
@@ -85,6 +105,9 @@ struct ContentView: View {
                     HStack {
                         Button(action: {
                             addHabits.toggle()
+                            if addHabits2 {
+                                addHabits2.toggle()
+                            }
                         }, label: {
                             Label(
                                 title: { Text("Habits") },
@@ -159,8 +182,8 @@ struct ContentView: View {
                             addActivity.toggle()
                         }, label: {
                             Label(
-                                title: { Text("Add Activity") },
-                                icon: { Image(systemName: "plus") }
+                                title: { Text("Activities") },
+                                icon: { Image(systemName: "waveform.path.ecg") }
                             )
                         })
                         .buttonStyle(.borderedProminent)
@@ -180,8 +203,8 @@ struct ContentView: View {
                                 .foregroundStyle(.secondary.opacity(0.2))
                             HStack {
                                 Label(
-                                    title: { Text("Add Activity / Habit") },
-                                    icon: { Image(systemName: "plus") }
+                                    title: { Text("Activities") },
+                                    icon: { Image(systemName: "waveform.path.ecg") }
                                 )
                                 .foregroundStyle(Color.accentColor)
                                 .padding(.leading)
@@ -191,22 +214,35 @@ struct ContentView: View {
                         .font(.headline.monospaced())
                         .frame(height: 30)
                         Spacer()
-                        VStack {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 5)
-                                    .foregroundStyle(.secondary.opacity(0.2))
-                                    .frame(height: 40)
-                                TextField("Activity | Title", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-                                    .padding()
+                        ScrollView(.vertical) {
+                            VStack(spacing: 3.25) {
+                                ForEach(0..<10) { i in
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .frame(height: 40)
+                                            .foregroundStyle(.secondary.opacity(0.2))
+                                        HStack {
+                                            VStack(alignment: .leading) {
+                                                Text("Activity \(i)")
+                                                Text("Date \(i)")
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                            Spacer()
+                                        }
+                                        .padding(.leading)
+                                    }
+                                }
                             }
                         }
-                        .padding(.vertical)
+                        .padding(.vertical, 20)
+                        Spacer()
                         HStack {
                             Button(action: {
-                                
+                                addActivity2.toggle()
                             }, label: {
                                 Label(
-                                    title: { Text("Add") },
+                                    title: { Text("Add Activity") },
                                     icon: { Image(systemName: "plus") }
                                 )
                             })
@@ -222,85 +258,154 @@ struct ContentView: View {
                     }
                 }
             }
-            if addGitHub {
+            if addGitHub || addHabits2 {
                 GridRow {
-                    if addHabits {
+                    if !addHabits {
                         VStack {
                             
                         }
                         .padding()
                         .frame(width: 300, height: 200)
-                    }
-                    VStack {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 5)
-                                .foregroundStyle(.secondary.opacity(0.2))
-                            HStack {
-                                Label(
-                                    title: { Text("Add GutHib") },
-                                    icon: { Image(systemName: "plus") }
-                                )
-                                .foregroundStyle(Color.accentColor)
-                                .padding(.leading)
-                                Spacer()
-                            }
-                        }
-                        .font(.headline.monospaced())
-                        .frame(height: 30)
-                        Spacer()
-                        VStack() {
+                    } else {
+                        VStack {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 5)
                                     .foregroundStyle(.secondary.opacity(0.2))
-                                    .frame(height: 40)
                                 HStack {
-                                    Image(systemName: "link")
-                                        .font(.headline)
-                                        .foregroundStyle(.blue)
-                                    TextField("Add your GutHib link", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-                                }
-                                .padding()
-                            }
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle")
+                                    Label(
+                                        title: { Text("Habits") },
+                                        icon: { Image(systemName: "checklist") }
+                                    )
                                     .foregroundStyle(Color.accentColor)
-                                Text("This is not working because i'm lazy. Sorry!")
+                                    .padding(.leading)
+                                    Spacer()
+                                }
                             }
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        HStack {
-                            Button(action: {
-                                
-                            }, label: {
-                                Label(
-                                    title: { Text("Visit Repository") },
-                                    icon: { Image(systemName: "folder") }
-                                )
-                            })
-                            .buttonStyle(.borderedProminent)
                             .font(.headline.monospaced())
+                            .frame(height: 30)
                             Spacer()
-                            .buttonStyle(.borderedProminent)
+                            VStack {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .foregroundStyle(.secondary.opacity(0.2))
+                                        .frame(height: 40)
+                                    HStack {
+                                        Image(systemName: "checkmark.circle")
+                                            .foregroundStyle(Color.accentColor)
+                                            .font(.headline)
+                                        TextField("Your New Habit", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+                                    }
+                                    .padding()
+                                }
+                                HStack {
+                                    Image(systemName: "exclamationmark.triangle")
+                                        .foregroundStyle(Color.accentColor)
+                                    Text("This is not working because i'm lazy. Sorry!")
+                                }
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            HStack {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .foregroundStyle(.secondary.opacity(0.2))
+                                    Text("10 Habits!")
+                                        .foregroundStyle(.white)
+                                }
+                                .frame(height: 30)
+                                Spacer()
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Label(
+                                        title: { Text("Add Habit") },
+                                        icon: { Image(systemName: "plus") }
+                                    )
+                                })
+                                .buttonStyle(.borderedProminent)
+                            }
                             .font(.headline.monospaced())
-                            Button(action: {
-                                
-                            }, label: {
-                                Label(
-                                    title: { Text("Add GutHib") },
-                                    icon: { Image(systemName: "plus") }
-                                )
-                            })
-                            .buttonStyle(.borderedProminent)
-                            .font(.headline.monospaced())
+                        }
+                        .padding()
+                        .frame(width: 300, height: 200)
+                        .background {
+                            RoundedRectangle(cornerRadius: 15)
+                                .foregroundStyle(.gray.opacity(0.1))
                         }
                     }
-                    .padding()
-                    .frame(width: 540, height: 200)
-                    .background {
-                        RoundedRectangle(cornerRadius: 15)
-                            .foregroundStyle(.gray.opacity(0.1))
+                    if addGitHub {
+                        VStack {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .foregroundStyle(.secondary.opacity(0.2))
+                                HStack {
+                                    Label(
+                                        title: { Text("Add GutHib") },
+                                        icon: { Image(systemName: "plus") }
+                                    )
+                                    .foregroundStyle(Color.accentColor)
+                                    .padding(.leading)
+                                    Spacer()
+                                }
+                            }
+                            .font(.headline.monospaced())
+                            .frame(height: 30)
+                            Spacer()
+                            VStack() {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .foregroundStyle(.secondary.opacity(0.2))
+                                        .frame(height: 40)
+                                    HStack {
+                                        Image(systemName: "link")
+                                            .font(.headline)
+                                            .foregroundStyle(.blue)
+                                        TextField("Add your GutHib link", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+                                    }
+                                    .padding()
+                                }
+                                HStack {
+                                    Image(systemName: "exclamationmark.triangle")
+                                        .foregroundStyle(Color.accentColor)
+                                    Text("This is not working because i'm lazy. Sorry!")
+                                }
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            HStack {
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Label(
+                                        title: { Text("Visit Repository") },
+                                        icon: { Image(systemName: "folder") }
+                                    )
+                                })
+                                .buttonStyle(.borderedProminent)
+                                .font(.headline.monospaced())
+                                Spacer()
+                                    .buttonStyle(.borderedProminent)
+                                    .font(.headline.monospaced())
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Label(
+                                        title: { Text("Add GutHib") },
+                                        icon: { Image(systemName: "plus") }
+                                    )
+                                })
+                                .buttonStyle(.borderedProminent)
+                                .font(.headline.monospaced())
+                            }
+                        }
+                        .padding()
+                        .frame(width: 540, height: 200)
+                        .background {
+                            RoundedRectangle(cornerRadius: 15)
+                                .foregroundStyle(.gray.opacity(0.1))
+                        }
                     }
                 }
             }
